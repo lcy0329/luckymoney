@@ -31,7 +31,8 @@ public class Main implements IXposedHookLoadPackage {
     int hongbaopfuck = 2131624863;//hongbaoviewid
     boolean hasgothongbao = true; //has got it
     boolean robot = false;
-
+    boolean selfsend = false;
+    boolean room = false;
     private void log(String tag, Object msg) {
         XposedBridge.log(tag + " " + msg.toString());
     }
@@ -181,14 +182,18 @@ public class Main implements IXposedHookLoadPackage {
                     log("fuckmm mess type", param.args[3].toString());
                     int msgtype = Integer.valueOf(param.args[3].toString());
                     if (msgtype != 436207665){
+                        log("get message","not a luckymoney message");
                         return;
                     }
                     newmsg = true;
                     //436207665 hongbao type
                     if (null != pendingIntent) {
                         log("jump to ", "pendding intent");
+                        curmax = -1;
+                        selfsend = false;
                         pendingIntent.send();
                     } else {
+                        log("in current chatting ui ","so click the last luckmoneyui");
                         // current chatting can click luckymoney
                         showview();
                     }
@@ -204,7 +209,6 @@ public class Main implements IXposedHookLoadPackage {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     pendingIntent = (PendingIntent) param.getResult();
-                    param.setResult(null);
                     log("save intent for jump", "pendding intent");
                 }
             });
@@ -246,6 +250,10 @@ public class Main implements IXposedHookLoadPackage {
                         curmax = tempmax;
                         log("lastmax update to", curmax);
                         lastview = (View) param.getResult();
+                        if (room && selfsend){//self send luckymoney get only in chatting room
+                            log("self","luckymoney");
+                            showview();
+                        }
                     }
                 }
             });
@@ -253,18 +261,21 @@ public class Main implements IXposedHookLoadPackage {
             e.printStackTrace();
         }
         try {
-            findAndHookMethod("com.tencent.mm.ui.chatting.ChattingUI$a", lpparam.classLoader, "onPause", new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    log("ChattingUI$a", "after onresume set curmax to -1");
-                    curmax = -1;
-                }
-            });
+
             findAndHookMethod("com.tencent.mm.ui.chatting.ChattingUI$a", lpparam.classLoader, "onResume", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     log("ChattingUI$a", "after onresume set curmax to -1");
                     chattingui = param.thisObject;
+                    String talkers =(String) XposedHelpers.callMethod(chattingui, "getTalkerUserName");
+                    log("current talkers name",talkers);
+                    if (talkers.endsWith("@chatroom")){
+                        room = true;
+                    }else{
+                        room = false;
+                    }
+                    log("in room:",room );
+
                 }
             });
         } catch (Exception e) {
@@ -281,6 +292,8 @@ public class Main implements IXposedHookLoadPackage {
                         newmsg = false;
                         pendingIntent = null;
                     }
+                    selfsend = true;
+                    curmax = -1;
                 }
             });
         } catch (Exception e) {
