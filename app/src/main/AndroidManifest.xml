@@ -20,7 +20,7 @@
             android:value="help you auto get luckymoney auto in wechat " />
         <meta-data
             android:name="xposedminversion"
-            android:value="54" />
+            android:value="30" />
     </application>
 
 </manifest>

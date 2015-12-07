@@ -14,6 +14,7 @@ import java.util.List;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
@@ -32,7 +33,7 @@ public class Main implements IXposedHookLoadPackage {
     boolean robot = false;
 
     private void log(String tag, Object msg) {
-//        XposedBridge.log(tag + " " + msg.toString());
+        XposedBridge.log(tag + " " + msg.toString());
     }
 
     private View getAllChildrenBFS(View v) {
@@ -75,10 +76,12 @@ public class Main implements IXposedHookLoadPackage {
             View v = getAllChildrenBFS(lastview);
             if (v != null) {
                 log("yes found right view", v.toString());
-                Object cj = XposedHelpers.getObjectField(chattingui, "kbM");
-                Object ck = XposedHelpers.getObjectField(cj, "keC");
                 robot = true;
-                XposedHelpers.callMethod(ck, "onClick", v);
+                v.performClick();
+//                Object cj = XposedHelpers.getObjectField(chattingui, "kbM");
+//                Object ck = XposedHelpers.getObjectField(cj, "keC");
+
+//                XposedHelpers.callMethod(ck, "onClick", v);
             }
         }
     }
@@ -201,6 +204,7 @@ public class Main implements IXposedHookLoadPackage {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     pendingIntent = (PendingIntent) param.getResult();
+                    param.setResult(null);
                     log("save intent for jump", "pendding intent");
                 }
             });
