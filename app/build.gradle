@@ -8,8 +8,8 @@ android {
         applicationId "com.xfunforx.luckymoney"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 5
-        versionName "1.4"
+        versionCode 0
+        versionName "1.x"
     }
 
     buildTypes {
