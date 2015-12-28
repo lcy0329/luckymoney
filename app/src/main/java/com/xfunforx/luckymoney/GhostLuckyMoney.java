@@ -71,17 +71,17 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
 
         try {
             //new message is coming here
-            Class e = findClass("com.tencent.mm.booter.e", loadPackageParam.classLoader);
-            findAndHookMethod("com.tencent.mm.booter.e", loadPackageParam.classLoader, "a", e, String.class, String.class, int.class, int.class, boolean.class, new XC_MethodHook() {
+            Class b = findClass("com.tencent.mm.booter.notification.b", loadPackageParam.classLoader);
+            findAndHookMethod("com.tencent.mm.booter.notification.b", loadPackageParam.classLoader, "a", b, String.class, String.class, int.class, int.class, boolean.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
-                    toggle = (Boolean) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.g.a", loadPackageParam.classLoader), "pO");
+                    toggle = (Boolean) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.g.a", loadPackageParam.classLoader), "pb");
                     // FIXME: 15/12/28 for wechat 6.3.8 pb
                     log("toggle is:" , String.valueOf(toggle));
                     if (toggle && param.args[3].toString().equals("436207665")) {
                         String nativeurl = readxml(param.args[2].toString());
-                        context = (Context) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.sdk.platformtools.y", loadPackageParam.classLoader), "getContext");
+                        context = (Context) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.sdk.platformtools.z", loadPackageParam.classLoader), "getContext");
                         Intent intent = new Intent();
                         intent.setClassName("com.tencent.mm", "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI");
                         int key;
@@ -101,7 +101,7 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                 }
             });
             // FIXME: 15/12/28 for wechat 6.3.8
-            findAndHookMethod("com.tencent.mm.model.bb", loadPackageParam.classLoader, "ai", boolean.class, new XC_MethodHook() {
+            findAndHookMethod("com.tencent.mm.model.bc", loadPackageParam.classLoader, "ai", boolean.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 
