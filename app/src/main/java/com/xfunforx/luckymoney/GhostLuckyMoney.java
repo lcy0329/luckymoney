@@ -1,12 +1,9 @@
 package com.xfunforx.luckymoney;
 
 import android.app.Activity;
-import android.app.AndroidAppHelper;
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -79,8 +76,9 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
 
-                    toggle = (Boolean) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.g.a", loadPackageParam.classLoader), "pj");
-                    XposedBridge.log("toggle " + String.valueOf(toggle));
+                    toggle = (Boolean) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.g.a", loadPackageParam.classLoader), "pb");
+                    // FIXME: 15/12/28 for wechat 6.3.8 pb
+                    log("toggle is:" , String.valueOf(toggle));
                     if (toggle && param.args[3].toString().equals("436207665")) {
                         String nativeurl = readxml(param.args[2].toString());
                         context = (Context) XposedHelpers.callStaticMethod(findClass("com.tencent.mm.sdk.platformtools.z", loadPackageParam.classLoader), "getContext");
@@ -102,8 +100,8 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                     }
                 }
             });
-
-            findAndHookMethod("com.tencent.mm.model.ba", loadPackageParam.classLoader, "ai", boolean.class, new XC_MethodHook() {
+            // FIXME: 15/12/28 for wechat 6.3.8
+            findAndHookMethod("com.tencent.mm.model.bc", loadPackageParam.classLoader, "ai", boolean.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 
