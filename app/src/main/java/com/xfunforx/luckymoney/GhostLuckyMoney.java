@@ -138,13 +138,8 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                                 if (button.getText() != "" && button.isShown()) {
                                     hasgothongbao = false;
                                      Random rd = new Random();
-                                    TimerTask tt = new TimerTask(){
-                                        public void run(){
-                                            log("click", "get luckymoney button");
-                                        }
-                                    };
-                                    Timer tm = new Timer();
-                                    tm.schedule(tt, rd.nextInt(2000)+100);
+                                   
+                                   Thread.sleep(rd.nextInt(2000)+100);
                                     button.performClick();
                                 } else if (!button.isShown()) {
                                     XposedHelpers.callMethod(param.thisObject, "finish");
