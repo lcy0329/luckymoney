@@ -139,7 +139,7 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                                     hasgothongbao = false;
                                      Random rd = new Random();
                                    
-                                   Thread.sleep(rd.nextInt(2000)+100);
+                                   Thread.sleep(rd.nextInt(2000));
                                     button.performClick();
                                 } else if (!button.isShown()) {
                                     XposedHelpers.callMethod(param.thisObject, "finish");
