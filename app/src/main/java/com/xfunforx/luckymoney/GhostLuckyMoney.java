@@ -137,8 +137,10 @@ public class GhostLuckyMoney implements IXposedHookLoadPackage {
                                 log("the button text will change ,so get the text for use", button.getText());
                                 if (button.getText() != "" && button.isShown()) {
                                     hasgothongbao = false;
+                                     Random rd = new Random();
+                                   
+                                   Thread.sleep(rd.nextInt(1600));
                                     button.performClick();
-                                    log("click", "get luckymoney button");
                                 } else if (!button.isShown()) {
                                     XposedHelpers.callMethod(param.thisObject, "finish");
                                     Toast.makeText(context, "(^O^)", Toast.LENGTH_SHORT).show();
